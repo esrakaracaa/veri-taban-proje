@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitap Düzenle</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding-top: 50px; }
+        .form-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #ffc107; color: #333; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold;}
+        button:hover { background-color: #e0a800; }
+        .cancel-btn { display: block; text-align: center; margin-top: 15px; color: #777; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="form-box">
+        <h2>✏️ Kitabı Düzenle</h2>
+        
+        <form th:action="@{/kitap-guncelle}" th:object="${kitap}" method="post">
+            
+            <input type="hidden" th:field="*{kitapId}" />
+
+            <label>Kitap Adı:</label>
+            <input type="text" th:field="*{kitapAdi}" required />
+
+            <label>ISBN:</label>
+            <input type="text" th:field="*{isbn}" />
+
+            <label>Basım Yılı:</label>
+            <input type="number" th:field="*{basimYili}" required />
+
+            <label>Yazar:</label>
+            <select th:field="*{yazarId}" required>
+                <option th:each="yazar : ${yazarlar}" 
+                        th:value="${yazar.yazarId}" 
+                        th:text="${yazar.adSoyad}"
+                        th:selected="${yazar.yazarId == kitap.yazarId}"></option>
+            </select>
+
+            <label>Kategori:</label>
+            <select th:field="*{kategoriId}" required>
+                <option th:each="kategori : ${kategoriler}" 
+                        th:value="${kategori.kategoriId}" 
+                        th:text="${kategori.ad}"
+                        th:selected="${kategori.kategoriId == kitap.kategoriId}"></option>
+            </select>
+            
+            <input type="hidden" th:field="*{aktifMi}" />
+
+            <button type="submit">Güncelle</button>
+        </form>
+
+        <a href="/kitap-listesi" class="cancel-btn">İptal</a>
+    </div>
+
+</body>
+</html>

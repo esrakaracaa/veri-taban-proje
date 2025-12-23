@@ -12,4 +12,6 @@ public interface KullaniciRepository
     List<Kullanici> findByAktifMiTrue();
 
     Kullanici findByEmail(String email);
+
+    
 }

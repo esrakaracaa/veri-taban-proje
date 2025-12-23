@@ -11,4 +11,9 @@ public interface KullaniciService {
     List<Kullanici> aktifKullanicilariGetir();
 
     Kullanici kaydet(Kullanici kullanici);
+    
+    // Mevcut kodların altına, süslü parantez kapanmadan önce ekle:
+void sil(Integer id);
+Kullanici idIleGetir(Integer id);
+
 }

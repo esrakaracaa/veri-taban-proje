@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitap Listesi</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        th, td { padding: 12px 15px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .back-btn { padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-btn">← Ana Menüye Dön</a>
+    <h2 style="margin-top:20px;">Kütüphane Kitap Listesi</h2>
+    <div style="margin-bottom: 20px;">
+    <a href="/kitap-ekle" style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        + Yeni Kitap Ekle
+    </a>
+</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kitap Adı</th>
+                <th>ISBN</th>
+                <th>Basım Yılı</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="kitap : ${kitaplar}">
+                <td th:text="${kitap.kitapId}"></td>
+                <td th:text="${kitap.kitapAdi}"></td>
+                <td th:text="${kitap.isbn}"></td>
+                <td th:text="${kitap.basimYili}"></td>
+                <td>
+                    <span th:if="${kitap.aktifMi}" style="color:green; font-weight:bold;">Mevcut</span>
+                    <span th:unless="${kitap.aktifMi}" style="color:red; font-weight:bold;">Arşivde</span>
+                </td>
+                <td>
+                    <a th:href="@{/kitap-duzenle/{id}(id=${kitap.kitapId})}" 
+       style="background-color: #ffc107; color: #333; padding: 5px 10px; text-decoration: none; border-radius: 3px; margin-right: 5px;">
+       Düzenle
+    </a>
+    <a th:href="@{/kitap-sil/{id}(id=${kitap.kitapId})}" 
+       style="background-color: #dc3545; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px;"
+       onclick="return confirm('Bu kitabı silmek istediğinize emin misiniz?');">
+       Sil
+    </a>
+</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div th:if="${kitaplar.empty}" style="margin-top:20px; color:red;">
+        Henüz hiç kitap eklenmemiş.
+    </div>
+
+</body>
+</html>

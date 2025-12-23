@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Listesi</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #6f42c1; color: white; } /* Mor renk */
+        .btn { padding: 8px 15px; text-decoration: none; border-radius: 4px; color: white; }
+        .btn-add { background-color: #28a745; margin-bottom: 20px; display: inline-block; }
+        .btn-del { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+
+    <a href="/" style="text-decoration: none; color: #555;">← Ana Menü</a>
+    <h2>👥 Kullanıcı Listesi</h2>
+
+    <a href="/kullanici-ekle" class="btn btn-add">+ Yeni Kullanıcı Ekle</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ad Soyad</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Borç</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="k : ${kullanicilar}">
+                <td th:text="${k.kullaniciId}"></td>
+                <td th:text="${k.adSoyad}"></td>
+                <td th:text="${k.email}"></td>
+                <td th:text="${k.rol}"></td>
+                <td th:text="${k.borc} + ' TL'"></td>
+                <td>
+                    <a th:href="@{/kullanici-sil/{id}(id=${k.kullaniciId})}" 
+                       class="btn btn-del"
+                       onclick="return confirm('Silmek istediğine emin misin?');">Sil</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

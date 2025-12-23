@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Akıllı Kütüphane</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+        h1 { color: #333; }
+        .btn {
+            display: inline-block; padding: 15px 30px; margin: 10px;
+            background-color: #007bff; color: white; text-decoration: none;
+            border-radius: 5px; font-size: 18px; transition: 0.3s;
+        }
+        .btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>📚 Akıllı Kütüphane Yönetim Sistemi</h1>
+    <p>Hoşgeldiniz! Yapmak istediğiniz işlemi seçiniz:</p>
+    
+    <div>
+        <a href="/kitap-listesi" class="btn">📖 Kitap Listesi</a>
+        <a href="#" class="btn" style="background-color: grey;">👥 Kullanıcılar (Yakında)</a>
+        <a href="#" class="btn" style="background-color: grey;">🔄 Ödünç İşlemleri (Yakında)</a>
+    </div>
+</body>
+</html>

@@ -10,6 +10,7 @@ import com.library.library.service.KitapService;
 
 @Service
 public class KitapServiceImpl implements KitapService {
+    
 
     private final KitapRepository kitapRepository;
 
@@ -30,5 +31,14 @@ public class KitapServiceImpl implements KitapService {
 public List<Kitap> aktifKitaplariGetir() {
     return kitapRepository.findByAktifMiTrue();
 }
+@Override
+    public void sil(Integer id) {
+        kitapRepository.deleteById(id);
+    }
+    @Override
+    public Kitap idIleGetir(Integer id) {
+        // Kitabı bulamazsa null döner, istersen hata da fırlatabiliriz ama şimdilik basit tutalım
+        return kitapRepository.findById(id).orElse(null);
+    }
 }
 

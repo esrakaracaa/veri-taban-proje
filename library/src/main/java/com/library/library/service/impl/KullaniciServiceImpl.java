@@ -34,4 +34,14 @@ public class KullaniciServiceImpl implements KullaniciService {
         kullanici.setAktifMi(true);
         return kullaniciRepository.save(kullanici);
     }
+
+    @Override
+    public void sil(Integer id) {
+        kullaniciRepository.deleteById(id);
+    }
+
+    @Override
+    public Kullanici idIleGetir(Integer id) {
+        return kullaniciRepository.findById(id).orElse(null);
+    }
 }

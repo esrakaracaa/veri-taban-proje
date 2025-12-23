@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Ekle</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding-top: 50px; }
+        .form-box { background: white; padding: 30px; width: 400px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; margin-top: 20px; padding: 10px; background: #6f42c1; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="form-box">
+    <h2 style="text-align:center;">Yeni Kullanıcı</h2>
+    <form th:action="@{/kullanici-kaydet}" th:object="${kullanici}" method="post">
+        
+        <label>Ad Soyad:</label>
+        <input type="text" th:field="*{adSoyad}" required />
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required />
+
+        <label>Şifre:</label>
+        <input type="text" th:field="*{sifre}" required />
+
+        <label>Rol:</label>
+        <select th:field="*{rol}">
+            <option value="OGRENCI">Öğrenci</option>
+            <option value="PERSONEL">Personel</option>
+            <option value="ADMIN">Admin</option>
+        </select>
+
+        <button type="submit">Kaydet</button>
+    </form>
+    <div style="text-align:center; margin-top:15px;">
+        <a href="/kullanicilar" style="text-decoration:none; color:#555;">İptal</a>
+    </div>
+</div>
+
+</body>
+</html>
