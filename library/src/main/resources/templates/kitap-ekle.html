@@ -3,58 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <title>Yeni Kitap Ekle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: Arial, sans-serif; padding: 40px; background-color: #f4f4f9; }
-        .form-container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        label { display: block; margin-bottom: 8px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #218838; }
-        .back-link { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+
+        .form-card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
+            width: 100%; 
+            max-width: 500px; 
+        }
+
+        .form-card h2 { 
+            color: #2c3e50; 
+            margin-top: 0; 
+            margin-bottom: 30px; 
+            text-align: center; 
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #555; 
+            font-size: 14px;
+        }
+
+        /* Input ve Select Stilini Birleştirme */
+        input, select { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+            transition: all 0.3s ease;
+            background-color: #fcfcfc;
+        }
+
+        input:focus, select:focus { 
+            border-color: #007bff; 
+            outline: none; 
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(0,123,255,0.1);
+        }
+
+        /* Kaydet Butonu */
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #28a745; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button:hover { 
+            background-color: #218838; 
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+        }
+
+        .back-link { 
+            display: block; 
+            text-align: center; 
+            margin-top: 20px; 
+            color: #6c757d; 
+            text-decoration: none; 
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover { color: #dc3545; }
+
+        /* İkonlu Seçim Kutuları İçin Küçük Bir Düzenleme */
+        select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 15px center; background-size: 15px; }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2 style="text-align:center;">Yeni Kitap Ekle</h2>
+<div class="form-card">
+    <h2><i class="fas fa-plus-circle"></i> Yeni Kitap Ekle</h2>
 
-    <div style="margin-bottom: 15px;">
-    <a href="/kitap-ekle" style="padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">
-        + Yeni Kitap Ekle
-    </a>
-</div>
-    
     <form th:action="@{/kitap-kaydet}" th:object="${kitap}" method="post">
         
-        <label>Kitap Adı:</label>
-        <input type="text" th:field="*{kitapAdi}" required placeholder="Örn: Sefiller" />
+        <div class="form-group">
+            <label><i class="fas fa-heading"></i> Kitap Adı</label>
+            <input type="text" th:field="*{kitapAdi}" required placeholder="Örn: Sefiller" />
+        </div>
 
-        <label>ISBN:</label>
-        <input type="text" th:field="*{isbn}" placeholder="Örn: 978-1234567890" />
+        <div class="form-group">
+            <label><i class="fas fa-barcode"></i> ISBN</label>
+            <input type="text" th:field="*{isbn}" placeholder="Örn: 978-1234567890" />
+        </div>
 
-        <label>Basım Yılı:</label>
-        <input type="number" th:field="*{basimYili}" required placeholder="2023" />
+        <div class="form-group">
+            <label><i class="fas fa-calendar-alt"></i> Basım Yılı</label>
+            <input type="number" th:field="*{basimYili}" required placeholder="2023" />
+        </div>
 
-        <label>Yazar:</label>
-        <select th:field="*{yazarId}" required>
-            <option value="">Bir Yazar Seçiniz</option>
-            <option th:each="yazar : ${yazarlar}" 
-                    th:value="${yazar.yazarId}" 
-                    th:text="${yazar.adSoyad}"></option>
-        </select>
+        <div class="form-group">
+            <label><i class="fas fa-user-edit"></i> Yazar</label>
+            <select th:field="*{yazarId}" required>
+                <option value="">Bir Yazar Seçiniz</option>
+                <option th:each="yazar : ${yazarlar}" 
+                        th:value="${yazar.yazarId}" 
+                        th:text="${yazar.adSoyad}"></option>
+            </select>
+        </div>
 
-        <label>Kategori:</label>
-        <select th:field="*{kategoriId}" required>
-            <option value="">Bir Kategori Seçiniz</option>
-            <option th:each="kategori : ${kategoriler}" 
-                    th:value="${kategori.kategoriId}" 
-                    th:text="${kategori.ad}"></option>
-        </select>
+        <div class="form-group">
+            <label><i class="fas fa-tags"></i> Kategori</label>
+            <select th:field="*{kategoriId}" required>
+                <option value="">Bir Kategori Seçiniz</option>
+                <option th:each="kategori : ${kategoriler}" 
+                        th:value="${kategori.kategoriId}" 
+                        th:text="${kategori.ad}"></option>
+            </select>
+        </div>
 
-        <button type="submit">Kaydet</button>
+        <button type="submit">
+            <i class="fas fa-save"></i> Kitabı Kaydet
+        </button>
     </form>
     
-    <a href="/kitap-listesi" class="back-link">İptal ve Listeye Dön</a>
+    <a href="/kitap-listesi" class="back-link">
+        <i class="fas fa-times"></i> İptal ve Listeye Dön
+    </a>
 </div>
 
 </body>

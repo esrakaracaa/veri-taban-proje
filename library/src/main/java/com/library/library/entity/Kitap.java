@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +24,7 @@ public class Kitap {
     @Column(name = "ISBN")
     private String isbn;
 
+    // Formlardan veri alırken kullanmaya devam etmek için duruyor
     @Column(name = "YazarId", nullable = false)
     private Integer yazarId;
 
@@ -31,8 +34,23 @@ public class Kitap {
     @Column(name = "BasimYili")
     private Integer basimYili;
 
+    @Column(name = "adet")
+    private Integer adet = 10;
+
     @Column(name = "AktifMi")
-    private Boolean aktifMi;
+    private Boolean aktifMi = true;
+
+    // ✅ YENİ: Yazarlar tablosuyla nesne bazlı ilişki (Thymeleaf burayı kullanır)
+    @ManyToOne
+    @JoinColumn(name = "YazarId", insertable = false, updatable = false)
+    private Yazar yazar;
+
+    // ✅ YENİ: Kategoriler tablosuyla nesne bazlı ilişki
+    @ManyToOne
+    @JoinColumn(name = "KategoriId", insertable = false, updatable = false)
+    private Kategori kategori;
+
+    // --- GETTER VE SETTER METODLARI ---
 
     public Integer getKitapId() { return kitapId; }
     public void setKitapId(Integer kitapId) { this.kitapId = kitapId; }
@@ -52,6 +70,16 @@ public class Kitap {
     public Integer getBasimYili() { return basimYili; }
     public void setBasimYili(Integer basimYili) { this.basimYili = basimYili; }
 
+    public Integer getAdet() { return adet; }
+    public void setAdet(Integer adet) { this.adet = adet; }
+
     public Boolean getAktifMi() { return aktifMi; }
     public void setAktifMi(Boolean aktifMi) { this.aktifMi = aktifMi; }
+
+    // ✅ YENİ GETTER/SETTERLAR (Hatanın çözümü için kritik)
+    public Yazar getYazar() { return yazar; }
+    public void setYazar(Yazar yazar) { this.yazar = yazar; }
+
+    public Kategori getKategori() { return kategori; }
+    public void setKategori(Kategori kategori) { this.kategori = kategori; }
 }

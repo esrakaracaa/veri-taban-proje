@@ -12,7 +12,7 @@ import com.library.library.entity.Yazar;
 import com.library.library.service.YazarService;
 
 @RestController
-@RequestMapping("/yazarlar")
+@RequestMapping("/api/yazarlar") // ✅ DÜZELTİLDİ: Başına /api eklendi
 public class YazarController {
 
     private final YazarService yazarService;

@@ -12,8 +12,19 @@ public interface KullaniciService {
 
     Kullanici kaydet(Kullanici kullanici);
     
-    // Mevcut kodların altına, süslü parantez kapanmadan önce ekle:
-void sil(Integer id);
-Kullanici idIleGetir(Integer id);
+    void sil(Integer id);
+    
+    Kullanici idIleGetir(Integer id);
 
+    // --- Yeni Eklenen Metodlar ---
+    
+    // Giriş yaparken e-posta ve şifre kontrolü için:
+    Kullanici girisKontrol(String email, String sifre); 
+
+    // Kayıt olma işlemi için (zaten kaydet var ama istersen ismini ayırabilirsin):
+    Kullanici kullaniciKaydet(Kullanici kullanici); 
+
+    Kullanici kullaniciBul(Integer id);
+
+    
 }

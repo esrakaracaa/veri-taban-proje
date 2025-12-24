@@ -2,50 +2,103 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Kullanıcı Listesi</title>
+    <title>Kullanıcı Yönetimi | Akıllı Kütüphane</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #6f42c1; color: white; } /* Mor renk */
-        .btn { padding: 8px 15px; text-decoration: none; border-radius: 4px; color: white; }
-        .btn-add { background-color: #28a745; margin-bottom: 20px; display: inline-block; }
-        .btn-del { background-color: #dc3545; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .header-section { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .bg-purple { background-color: #6f42c1; color: white; }
+        .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .table thead { background-color: #6f42c1; color: white; border: none; }
+        .user-info-bar { background: #e9ecef; padding: 8px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; }
+        .role-badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .btn-action { border-radius: 10px; font-weight: 500; transition: 0.3s; }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
-    <a href="/" style="text-decoration: none; color: #555;">← Ana Menü</a>
-    <h2>👥 Kullanıcı Listesi</h2>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="/" class="btn btn-outline-secondary btn-action shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i> Ana Menüye Dön
+        </a>
+        
+        <div class="user-info-bar shadow-sm" th:if="${girisYapanKullanici != null}">
+            <i class="fas fa-user-shield text-purple"></i>
+            <span>Hoş geldin, <strong th:text="${girisYapanKullanici.adSoyad}">Kullanıcı</strong></span>
+            <span class="badge bg-purple ms-2" th:text="${girisYapanKullanici.rol}">ROL</span>
+        </div>
+    </div>
 
-    <a href="/kullanici-ekle" class="btn btn-add">+ Yeni Kullanıcı Ekle</a>
+    <div class="header-section text-center">
+        <h2 class="fw-bold text-dark mb-2"><i class="fas fa-users-cog text-purple me-2"></i> Kullanıcı Yönetim Paneli</h2>
+        <p class="text-muted">Sistemdeki tüm üyeleri, personelleri ve borç durumlarını buradan takip edebilirsiniz.</p>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Ad Soyad</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Borç</th>
-                <th>İşlemler</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="k : ${kullanicilar}">
-                <td th:text="${k.kullaniciId}"></td>
-                <td th:text="${k.adSoyad}"></td>
-                <td th:text="${k.email}"></td>
-                <td th:text="${k.rol}"></td>
-                <td th:text="${k.borc} + ' TL'"></td>
-                <td>
-                    <a th:href="@{/kullanici-sil/{id}(id=${k.kullaniciId})}" 
-                       class="btn btn-del"
-                       onclick="return confirm('Silmek istediğine emin misin?');">Sil</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="mb-4" th:if="${girisYapanKullanici != null and (girisYapanKullanici.rol == 'ADMIN' or girisYapanKullanici.rol == 'PERSONEL')}">
+        <a href="/kullanici-ekle" class="btn btn-success btn-action px-4 py-2 shadow">
+            <i class="fas fa-user-plus me-2"></i> Yeni Kullanıcı Tanımla
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Ad Soyad</th>
+                    <th>E-Posta Adresi</th>
+                    <th>Sistem Rolü</th>
+                    <th>Borç Bakiyesi</th>
+                    <th th:if="${girisYapanKullanici != null and (girisYapanKullanici.rol == 'ADMIN' or girisYapanKullanici.rol == 'PERSONEL')}" 
+                        class="text-center">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="k : ${kullanicilar}">
+                    <td class="ps-4 fw-bold text-muted" th:text="${k.kullaniciId}">#</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-purple bg-opacity-10 p-2 me-3 text-purple">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="fw-bold text-dark" th:text="${k.adSoyad}">İsim Soyisim</span>
+                        </div>
+                    </td>
+                    
+                    <td th:text="${k.eposta}">mail@example.com</td>
+                    
+                    <td>
+                        <span th:classappend="${k.rol == 'ADMIN'} ? 'bg-danger text-white' : (${k.rol == 'PERSONEL'} ? 'bg-primary text-white' : 'bg-info text-white')" 
+                              class="role-badge" th:text="${k.rol}">ÜYE</span>
+                    </td>
+                    <td>
+                        <span class="fw-bold text-danger" th:text="${k.borc != null ? k.borc : '0.00'} + ' TL'">0.00 TL</span>
+                    </td>
+                    
+                    <td th:if="${girisYapanKullanici != null and (girisYapanKullanici.rol == 'ADMIN' or girisYapanKullanici.rol == 'PERSONEL')}" 
+                        class="text-center">
+                        <div class="btn-group shadow-sm">
+                            <a th:href="@{/kullanici-sil/{id}(id=${k.kullaniciId})}" 
+                               class="btn btn-sm btn-outline-danger" 
+                               onclick="return confirm('Bu kullanıcıyı sistemden silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
+                                <i class="fas fa-user-minus me-1"></i> Sil
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div th:if="${kullanicilar == null or kullanicilar.empty}" class="p-5 text-center text-muted">
+            <i class="fas fa-users-slash fa-3x mb-3 opacity-25"></i>
+            <p>Sistemde henüz kayıtlı kullanıcı bulunmamaktadır.</p>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

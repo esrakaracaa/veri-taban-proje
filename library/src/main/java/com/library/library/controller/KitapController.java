@@ -12,7 +12,7 @@ import com.library.library.entity.Kitap;
 import com.library.library.service.KitapService;
 
 @RestController
-@RequestMapping("/kitaplar")
+@RequestMapping("/api/kitaplar") // ✅ DÜZELTİLDİ: Başına /api eklendi
 public class KitapController {
 
     private final KitapService kitapService;
@@ -30,9 +30,9 @@ public class KitapController {
     public Kitap ekle(@RequestBody Kitap kitap) {
         return kitapService.kaydet(kitap);
     }
-    @GetMapping("/aktif")
-public List<Kitap> aktifleriGetir() {
-    return kitapService.aktifKitaplariGetir();
-}
 
+    @GetMapping("/aktif")
+    public List<Kitap> aktifleriGetir() {
+        return kitapService.aktifKitaplariGetir();
+    }
 }

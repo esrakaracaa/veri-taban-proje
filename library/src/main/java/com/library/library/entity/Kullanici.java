@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,8 +23,9 @@ public class Kullanici {
     @Column(name = "AdSoyad", nullable = false)
     private String adSoyad;
 
+    // ✅ DÜZELTİLDİ: Controller'daki getEposta() ile uyumlu olması için alan adı eposta yapıldı
     @Column(name = "Email", nullable = false)
-    private String email;
+    private String eposta;
 
     @Column(name = "Sifre", nullable = false)
     private String sifre;
@@ -31,78 +33,47 @@ public class Kullanici {
     @Column(name = "Rol", nullable = false)
     private String rol;
 
+    // Varsayılan değer atandı
     @Column(name = "AktifMi")
-    private Boolean aktifMi;
+    private Boolean aktifMi = true;
 
+    // Başlangıç borcu 0 olarak ayarlandı
     @Column(name = "Borc")
-    private BigDecimal borc;
+    private BigDecimal borc = BigDecimal.ZERO;
 
     @Column(name = "OlusturmaTarihi")
     private LocalDateTime olusturmaTarihi;
 
-    // GETTER - SETTER
-    public Integer getKullaniciId() {
-        return kullaniciId;
+    // Yeni kayıt oluşturulmadan önce tarihi otomatik atar
+    @PrePersist
+    protected void onCreate() {
+        olusturmaTarihi = LocalDateTime.now();
     }
 
-    public void setKullaniciId(Integer kullaniciId) {
-        this.kullaniciId = kullaniciId;
-    }
+    // --- GETTER VE SETTER METODLARI ---
 
-    public String getAdSoyad() {
-        return adSoyad;
-    }
+    public Integer getKullaniciId() { return kullaniciId; }
+    public void setKullaniciId(Integer kullaniciId) { this.kullaniciId = kullaniciId; }
 
-    public void setAdSoyad(String adSoyad) {
-        this.adSoyad = adSoyad;
-    }
+    public String getAdSoyad() { return adSoyad; }
+    public void setAdSoyad(String adSoyad) { this.adSoyad = adSoyad; }
 
-    public String getEmail() {
-        return email;
-    }
+    // ✅ KRİTİK DÜZELTME: Controller bu ismi arıyor
+    public String getEposta() { return eposta; }
+    public void setEposta(String eposta) { this.eposta = eposta; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getSifre() { return sifre; }
+    public void setSifre(String sifre) { this.sifre = sifre; }
 
-    public String getSifre() {
-        return sifre;
-    }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 
-    public void setSifre(String sifre) {
-        this.sifre = sifre;
-    }
+    public Boolean getAktifMi() { return aktifMi; }
+    public void setAktifMi(Boolean aktifMi) { this.aktifMi = aktifMi; }
 
-    public String getRol() {
-        return rol;
-    }
+    public BigDecimal getBorc() { return borc; }
+    public void setBorc(BigDecimal borc) { this.borc = borc; }
 
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public Boolean getAktifMi() {
-        return aktifMi;
-    }
-
-    public void setAktifMi(Boolean aktifMi) {
-        this.aktifMi = aktifMi;
-    }
-
-    public BigDecimal getBorc() {
-        return borc;
-    }
-
-    public void setBorc(BigDecimal borc) {
-        this.borc = borc;
-    }
-
-    public LocalDateTime getOlusturmaTarihi() {
-        return olusturmaTarihi;
-    }
-
-    public void setOlusturmaTarihi(LocalDateTime olusturmaTarihi) {
-        this.olusturmaTarihi = olusturmaTarihi;
-    }
+    public LocalDateTime getOlusturmaTarihi() { return olusturmaTarihi; }
+    public void setOlusturmaTarihi(LocalDateTime olusturmaTarihi) { this.olusturmaTarihi = olusturmaTarihi; }
 }
-

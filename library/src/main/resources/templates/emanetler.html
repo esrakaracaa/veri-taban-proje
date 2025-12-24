@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Emanet Takibi | Akıllı Kütüphane</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .thead-purple { background-color: #6f42c1; color: white; border: none; }
+        .user-info-bar { background: white; padding: 8px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .btn-action { border-radius: 10px; font-weight: 600; transition: 0.3s; }
+        .btn-action:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .pagination .page-link { color: #6f42c1; border-radius: 5px; margin: 0 2px; }
+        .pagination .page-item.active .page-link { background-color: #6f42c1; border-color: #6f42c1; color: white; }
+        
+        /* Gecikmiş kitaplar için satır vurgulama */
+        .row-delayed { background-color: #fff5f5 !important; }
+        .penalty-text { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="/" class="btn btn-outline-secondary btn-action shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i> Ana Menüye Dön
+        </a>
+        
+        <div class="user-info-bar" th:if="${girisYapanKullanici != null}">
+            <i class="fas fa-user-circle text-primary"></i>
+            <span>Hoş geldin, <strong th:text="${girisYapanKullanici.adSoyad}">Kullanıcı</strong></span>
+            <span class="badge bg-primary ms-2" th:text="${girisYapanKullanici.rol}">ROL</span>
+        </div>
+    </div>
+
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark"><i class="fas fa-history text-primary me-2"></i> Emanet Kitap Takibi</h2>
+        <p class="text-muted">Ödünç süresi test için <strong>1 Dakika</strong> olarak ayarlanmıştır. Süre dolduğunda ceza otomatik hesaplanır.</p>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="thead-purple">
+                <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Üye Bilgisi</th> 
+                    <th>Kitap Adı</th> 
+                    <th>Ödünç Tarihi</th>
+                    <th>Son Teslim Tarihi</th>
+                    <th>Ceza Tutarı</th>
+                    <th>Sistem Durumu</th>
+                    <th class="text-center">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="emanet : ${emanetler}" 
+                    th:classappend="${emanet.durum == 'ÜYEDE' and T(java.time.LocalDateTime).now().isAfter(emanet.beklenenIadeTarihi)} ? 'row-delayed'">
+                    
+                    <td class="ps-4 fw-bold text-muted" th:text="${emanet.id}">#</td>
+                    
+                    <td>
+                        <div class="fw-bold" th:text="${emanet.kullanici != null ? emanet.kullanici.adSoyad : 'Bilinmeyen'}">Üye</div>
+                        <small class="text-muted" th:text="${'ID: ' + emanet.kullaniciId}"></small>
+                    </td>
+                    
+                    <td class="fw-bold text-dark">
+                        <i class="fas fa-book text-secondary me-1"></i>
+                        <span th:text="${emanet.kitap != null ? emanet.kitap.kitapAdi : 'ID: ' + emanet.kitapId}">Kitap</span>
+                    </td>
+                    
+                    <td th:text="${#temporals.format(emanet.oduncTarihi, 'dd.MM.yyyy HH:mm')}">-</td>
+                    <td th:text="${#temporals.format(emanet.beklenenIadeTarihi, 'dd.MM.yyyy HH:mm')}">-</td>
+                    
+                    <td class="penalty-text">
+                        <span th:if="${emanet.cezaMiktari > 0}" th:text="${emanet.cezaMiktari + ' TL'}"></span>
+                        <span th:if="${emanet.cezaMiktari == 0 or emanet.cezaMiktari == null}" class="text-muted small">-</span>
+                    </td>
+
+                    <td>
+                        <span th:if="${emanet.durum == 'ÜYEDE'}" class="status-badge bg-warning text-dark">
+                            <i class="fas fa-book-reader me-1"></i> Üyede
+                        </span>
+                        <span th:if="${emanet.durum == 'IADE_BEKLIYOR'}" class="status-badge bg-info text-white">
+                            <i class="fas fa-hourglass-half me-1"></i> Onay Bekliyor
+                        </span>
+                        <span th:if="${emanet.durum == 'TESLIM_EDILDI'}" class="status-badge bg-success text-white">
+                            <i class="fas fa-check-circle me-1"></i> İade Edildi
+                        </span>
+                    </td>
+
+                    <td class="text-center">
+                        <div th:if="${girisYapanKullanici?.rol == 'USER' or girisYapanKullanici?.rol == 'UYE'}">
+                            <a th:if="${emanet.durum == 'ÜYEDE'}" 
+                               th:href="@{/iade-talebi/{id}(id=${emanet.id})}" 
+                               class="btn btn-sm btn-primary btn-action px-3">
+                               <i class="fas fa-paper-plane me-1"></i> İade Et
+                            </a>
+                        </div>
+
+                        <div th:if="${girisYapanKullanici?.rol == 'ADMIN' or girisYapanKullanici?.rol == 'PERSONEL'}">
+                            <a th:if="${emanet.durum == 'IADE_BEKLIYOR'}" 
+                               th:href="@{/iade-et/{id}(id=${emanet.id})}" 
+                               class="btn btn-sm btn-success btn-action px-3">
+                               <i class="fas fa-check me-1"></i> İadeyi Onayla
+                            </a>
+                            <a th:if="${emanet.durum == 'ÜYEDE'}" 
+                               th:href="@{/iade-et/{id}(id=${emanet.id})}" 
+                               class="btn btn-sm btn-outline-primary btn-action px-3">
+                               Direkt İade Al
+                            </a>
+                        </div>
+                        
+                        <span th:if="${emanet.durum == 'TESLIM_EDILDI'}" class="text-success fw-bold small">
+                            <i class="fas fa-check-double"></i> Arşivlendi
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(emanetler)}" class="p-5 text-center text-muted">
+            <i class="fas fa-clipboard-list fa-3x mb-3 opacity-25"></i>
+            <p>Henüz herhangi bir ödünç kaydı bulunmamaktadır.</p>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center mt-4">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/emanetler(page=${currentPage - 1})}">Geri</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/emanetler(page=${i})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/emanetler(page=${currentPage + 1})}">İleri</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+</html>

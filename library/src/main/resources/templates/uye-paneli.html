@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="30">
+    <title>Üye Paneli | Akıllı Kütüphane</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #f0f4f8; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .welcome-header { background: white; padding: 15px 30px; border-radius: 0 0 25px 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 40px; }
+        .stat-card { border: none; border-radius: 24px; padding: 25px; background: white; transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.07); }
+        .stat-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 15px; }
+        .menu-btn { border: none; border-radius: 20px; padding: 30px; text-align: center; transition: 0.3s; color: white; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 15px; height: 100%; }
+        .menu-btn i { font-size: 35px; }
+        .menu-btn span { font-weight: 700; font-size: 18px; }
+        .menu-btn:hover { filter: brightness(1.1); transform: scale(1.03); color: white; }
+        .btn-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .btn-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bg-soft-blue { background-color: rgba(79, 172, 254, 0.1); color: #4facfe; }
+        .bg-soft-purple { background-color: rgba(118, 75, 162, 0.1); color: #764ba2; }
+        .bg-soft-red { background-color: rgba(245, 87, 108, 0.1); color: #f5576c; }
+    </style>
+</head>
+<body>
+
+<div class="welcome-header d-flex justify-content-between align-items-center container-fluid">
+    <div class="d-flex align-items-center gap-2">
+        <img src="https://img.icons8.com/fluency/48/book-shelf.png" alt="logo"/>
+        <h4 class="mb-0 fw-bold text-dark">Akıllı Kütüphane Üye Paneli</h4>
+    </div>
+    <div class="d-flex align-items-center gap-3" th:if="${girisYapanKullanici != null}">
+        <div class="text-end">
+            <small class="text-muted d-block">Hoş geldin,</small>
+            <span class="fw-bold text-dark" th:text="${girisYapanKullanici.adSoyad}">Üye İsmi</span>
+        </div>
+        <div class="vr mx-2"></div>
+        <a href="/logout" class="btn btn-outline-danger rounded-pill px-4 fw-bold shadow-sm">
+            <i class="fas fa-power-off me-2"></i>Çıkış Yap
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon bg-soft-blue">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h6 class="text-muted fw-bold small">ŞU AN ÜZERİMDEKİLER</h6>
+                <h2 class="display-6 fw-bold m-0 text-dark" th:text="${uzerimdekiler}">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon bg-soft-purple">
+                    <i class="fas fa-history"></i>
+                </div>
+                <h6 class="text-muted fw-bold small">TOPLAM OKUNAN</h6>
+                <h2 class="display-6 fw-bold m-0 text-dark" th:text="${okunanlar}">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon bg-soft-red">
+                    <i class="fas fa-lira-sign"></i>
+                </div>
+                <h6 class="text-muted fw-bold small">GÜNCEL BORÇ</h6>
+                <h2 class="display-6 fw-bold m-0 text-danger" 
+                    th:text="${#numbers.formatDecimal(toplamBorc, 1, 2) + ' TL'}">0.00 TL</h2>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="fw-bold mb-4">Hızlı İşlemler</h4>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <a href="/kitap-listesi" class="menu-btn btn-blue shadow-lg">
+                <i class="fas fa-search"></i>
+                <span>Kitap Ara ve Ödünç Al</span>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/emanetler" class="menu-btn btn-purple shadow-lg">
+                <i class="fas fa-list-check"></i>
+                <span>Aldığım Kitaplar / İade Et</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-5 p-4 bg-white rounded-4 shadow-sm border-start border-primary border-4">
+        <div class="d-flex align-items-center gap-3">
+            <i class="fas fa-info-circle text-primary fa-2x"></i>
+            <div>
+                <h6 class="fw-bold mb-1">Önemli Hatırlatma (Test Modu)</h6>
+                <p class="text-muted mb-0 small">
+                    Sistem şu an test modundadır. Kitap iade süresi <strong>1 Dakika</strong> olarak tanımlanmıştır. 
+                    Bu süre dolduğunda borcunuz <strong>dakika başı 5 TL</strong> artacaktır.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

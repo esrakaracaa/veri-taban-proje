@@ -12,7 +12,7 @@ import com.library.library.entity.Kategori;
 import com.library.library.service.KategoriService;
 
 @RestController
-@RequestMapping("/kategoriler")
+@RequestMapping("/api/kategoriler")
 public class KategoriController {
 
     private final KategoriService kategoriService;
